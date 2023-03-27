@@ -312,12 +312,9 @@ class Classifier(nn.Module):
 
 
 if __name__ == "__main__":
-  model = MyModel()
-
-
     mtailor = Classifier(BasicBlock, [2, 2, 2, 2])
-    mtailor.load_state_dict(torch.load("pytorch_model_weights.pth")
+    mtailor.load_state_dict(torch.load("https://www.dropbox.com/s/b7641ryzmkceoc9/pytorch_model_weights.pth")
     
-    img = Image.open("./n01667114_mud_turtle.JPEG")
+    img = Image.open("01667114_mud_turtle.JPEG")
     input = mtailor.preprocess_numpy(img).unsqueeze(0) 
     torch.onnx.export(model, input, 'saved_model.onnx')
