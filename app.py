@@ -1,5 +1,17 @@
 import os
+import onnxruntime
 
+from typing import Callable, List, Optional, Type, Union
+
+import torch
+import torch.nn as nn
+
+from torch import Tensor
+import numpy as np
+
+from torchvision import transforms
+
+from PIL import Image
 from PIL import Image
 import cv2
 import numpy as np
@@ -11,7 +23,8 @@ import numpy as np
 def init():
     global model
     
-    model = tf.saved_model.load("saved_model.pb")
+    model = onnxruntime.InferenceSession('model.onnx')
+
 def preprocess_image(image):
     # Convert to RGB format if needed
     if image.shape[-1] == 3 and image.dtype == np.uint8:
@@ -41,13 +54,9 @@ def inference(model_inputs:dict) -> dict:
     if prompt == None:
         return {'message': "No prompt provided"}
     image = Image.open(prompt)
-    image_array = preprocess_image(image)
-
-    # Make a prediction using the model
-    prediction = model.predict(image_array)[0]
-    digit = np.argmax(prediction)
-
+    image_array = preprocess_image(image).unsequeeze(0)
+    output = onnx_model.run(None, {input_name: image_array})
 
     # Return the results as a dictionary
   
-    return {'image_base64': str(digit)}
+    return {'image_base64': output}
