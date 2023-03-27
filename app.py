@@ -1,33 +1,21 @@
-import tensorflow as tf
-import numpy as np
-import os
-import torch
-import base64
-from io import BytesIO
-from transformers import pipeline
-from diffusers import StableDiffusionPipeline
-from PIL import Image
+import json
+from flask import Flask, request
 
 
-# Init is ran on server startup
-# Load your model to GPU as a global variable here using the variable name "model"
-def init():
-    global model
+app = Flask(__name__)
+model = tf.keras.models.load_model('saved_model.pb')
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Get the image file from the request
+    file = request.files['image_name']
 
-    model = StableDiffusionPipeline.from_pretrained("saved_model.pb").to("cuda")
-def inference(model_inputs:dict) -> dict:
-    global model
-    return dict
-    # Get the image array from the request
-    image_path = model_inputs.get('image_path', None)
-    image = Image.open(image_path)
-    image = np.array(image)
-    # Preprocess the image array
-    image_array = image_array.astype('float32') / 255
-    image_array = np.expand_dims(image_array, axis=0)
+    # Preprocess the image
+    image = Image.open(file)
+    image_array = preprocess_image(image)
 
-    # Make the prediction using the MNIST model
-    prediction = model.predict(image_array).tolist()[0]
+    # Make a prediction using the model
+    prediction = model.predict(image_array)[0]
+    digit = np.argmax(prediction)
 
     # Return the prediction as a JSON object
-    return {'prediction': prediction}
+    return {'prediction': str(digit)}
