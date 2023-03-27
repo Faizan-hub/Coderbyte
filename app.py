@@ -6,6 +6,7 @@ import base64
 from io import BytesIO
 from transformers import pipeline
 from diffusers import StableDiffusionPipeline
+from PIL import Image
 
 
 # Init is ran on server startup
@@ -17,8 +18,9 @@ def init():
 def inference(model_inputs:dict) -> dict:
     global model
     # Get the image array from the request
-    image = model_inputs.get('image', None)
-
+    image_path = model_inputs.get('image_path', None)
+    image = Image.open(image_path)
+    image = np.array(image)
     # Preprocess the image array
     image_array = image_array.astype('float32') / 255
     image_array = np.expand_dims(image_array, axis=0)
