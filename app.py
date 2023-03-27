@@ -9,7 +9,7 @@ import tensorflow as tf
 def init():
     global model
     
-    loaded_model = tf.saved_model.load("saved_model.pb)
+    loaded_model = tf.saved_model.load("saved_model.pb")
     
 
 # Inference is ran for every server call
