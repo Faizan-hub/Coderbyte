@@ -1,5 +1,6 @@
 FROM tensorflow/serving:latest
 RUN apt-get update && apt-get install -y python3-pip
+RUN pip3 install torch
 # Copy the SavedModel to the model directory
 COPY saved_model.pb /models/saved_model
 
