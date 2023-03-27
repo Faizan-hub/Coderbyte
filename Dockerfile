@@ -2,8 +2,6 @@
 RUN apt-get update && apt-get install -y python3-pip
 RUN apt-get update && apt-get install -y git
 RUN pip3 install torch
-ADD requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
 WORKDIR /
 # Copy the SavedModel and img
 COPY saved_model.pb saved_model.pb
