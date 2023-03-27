@@ -1,33 +1,30 @@
 import tensorflow as tf
 import numpy as np
-from flask import Flask, jsonify, request
+import os
+import torch
+import base64
+from io import BytesIO
+from transformers import pipeline
+from diffusers import StableDiffusionPipeline
 
-# Load the saved model
-model = tf.keras.models.load_model('/models/saved_model.pb')
 
-# Initialize Flask application
-app = Flask(__name__)
+# Init is ran on server startup
+# Load your model to GPU as a global variable here using the variable name "model"
+def init():
+    global model
 
-# Define a predict function
-@app.route('/predict', methods=['POST'])
-def predict():
-    # Get the image data from the request
-    image_data = request.json['image']
-    
-    # Preprocess the image data
-    processed_data = preprocess_image(image_data)
-    
-    # Use the model to make a prediction
-    prediction = model.predict(processed_data)
-    
-    # Convert the prediction to a JSON object
-    response = {'prediction': int(np.argmax(prediction))}
-    
-    return jsonify(response)
+    model = StableDiffusionPipeline.from_pretrained("/models/saved_model.pb").to("cuda")
+def inference():
+    # Get the image array from the request
+    image = model_inputs.get('image', None)
+    image_array = np.array(image)
 
-# Define a function to preprocess the image data
-def preprocess_image(image_data):
-    # Reshape the image to 28x28 pixels and normalize the pixel values
-    processed_data = (np.array(image_data).reshape((1, 28, 28, 1)) / 255.0).astype(np.float32)
-    
-    return processed_data
+    # Preprocess the image array
+    image_array = image_array.astype('float32') / 255
+    image_array = np.expand_dims(image_array, axis=0)
+
+    # Make the prediction using the MNIST model
+    prediction = model.predict(image_array).tolist()[0]
+
+    # Return the prediction as a JSON object
+    return {'prediction': prediction}
