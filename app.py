@@ -14,20 +14,20 @@ from PIL import Image
 def init():
     global model
 
-    model = StableDiffusionPipeline.from_pretrained("/models/saved_model.pb").to("cuda")
+    model = StableDiffusionPipeline.from_pretrained("saved_model.pb").to("cuda")
 def inference(model_inputs:dict) -> dict:
     global model
     return dict
     # Get the image array from the request
-#     image_path = model_inputs.get('image_path', None)
-#     image = Image.open(image_path)
-#     image = np.array(image)
-#     # Preprocess the image array
-#     image_array = image_array.astype('float32') / 255
-#     image_array = np.expand_dims(image_array, axis=0)
+    image_path = model_inputs.get('image_path', None)
+    image = Image.open(image_path)
+    image = np.array(image)
+    # Preprocess the image array
+    image_array = image_array.astype('float32') / 255
+    image_array = np.expand_dims(image_array, axis=0)
 
-#     # Make the prediction using the MNIST model
-#     prediction = model.predict(image_array).tolist()[0]
+    # Make the prediction using the MNIST model
+    prediction = model.predict(image_array).tolist()[0]
 
-#     # Return the prediction as a JSON object
-#     return {'prediction': prediction}
+    # Return the prediction as a JSON object
+    return {'prediction': prediction}
