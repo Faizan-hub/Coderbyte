@@ -6,10 +6,10 @@ RUN pip install tensorflow==2.11.0 --ignore-installed
 WORKDIR /
 ADD requirements.txt .
 RUN pip install -r requirements.txt
-
-# Copy the SavedModel and img
-COPY saved_model.pb saved_model.pb
-COPY img1.jpg img1.jpg
+ADD convert_to_onnx.py .
+ADD test_onnx.py .
+ADD n01440764_tench.jpeg .
+ADD n01667114_mud_turtle.jpeg .
 ADD app.py .
 ADD server.py .
 
