@@ -1,15 +1,15 @@
 import os
 import torch
+import tensorflow as tf
 
 
 
 # # Init is ran on server startup
 # # Load your model to GPU as a global variable here using the variable name "model"
-# def init():
-#     global model
+def init():
+    global model
     
-#     model_name = os.getenv("MODEL_NAME")
-#     model = StableDiffusionPipeline.from_pretrained(model_name).to("cuda")
+    loaded_model = tf.saved_model.load("saved_model.pb)
     
 
 # Inference is ran for every server call
