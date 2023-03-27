@@ -14,7 +14,8 @@ def init():
     global model
 
     model = StableDiffusionPipeline.from_pretrained("/models/saved_model.pb").to("cuda")
-def inference():
+def inference(model_inputs:dict) -> dict:
+    global model
     # Get the image array from the request
     image = model_inputs.get('image', None)
     image_array = np.array(image)
