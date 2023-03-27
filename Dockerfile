@@ -1,6 +1,7 @@
 FROM tensorflow/serving:latest
 RUN apt-get update && apt-get install -y python3-pip
 RUN pip3 install torch
+WORKDIR /
 # Copy the SavedModel and img
 COPY saved_model.pb saved_model.pb
 COPY img1.jpg img1.jpg
